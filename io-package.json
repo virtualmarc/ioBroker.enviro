@@ -66,6 +66,8 @@
         "type": "hardware",
         "compact": true,
         "materialize": true,
+        "connectionType": "local",
+        "dataSource": "push",
         "dependencies": [
             {
                 "js-controller": ">=1.4.2"
