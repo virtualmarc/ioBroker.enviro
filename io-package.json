@@ -56,7 +56,7 @@
         ],
         "license": "MIT",
         "platform": "Javascript/Node.js",
-        "main": "build/src/main.js",
+        "main": "build/main.js",
         "icon": "enviro.png",
         "enabled": false,
         "extIcon": "https://raw.githubusercontent.com/virtualmarc/ioBroker.enviro/master/admin/enviro.png",
