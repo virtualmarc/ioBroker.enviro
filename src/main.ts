@@ -38,9 +38,13 @@ class Enviro extends utils.Adapter {
     private async onReady(): Promise<void> {
         this.log.info(`Starting Enviro api on port ${this.config.port}`);
 
+        this.app.get('/', (req: any, res: any) => {
+            res.send('Enviro Custom HTTP Server running, add /enviro to your enviro!');
+        });
+
         this.app.post('/enviro', (req: any, res: any) => {
             try {
-                this.log.debug(`Incoming message: ${req.body}`);
+                this.log.debug(`Incoming request: ${req}`);
 
                 const payload: any = JSON.parse(req.body);
 
@@ -65,10 +69,10 @@ class Enviro extends utils.Adapter {
 
     private validatePayload(payload: any): boolean {
         return payload.hasOwnProperty('nickname') &&
-          payload.hasOwnProperty('model') &&
-          payload.hasOwnProperty('readings') &&
-          typeof payload.readings === 'object' &&
-          Object.keys(payload.readings).length > 0;
+            payload.hasOwnProperty('model') &&
+            payload.hasOwnProperty('readings') &&
+            typeof payload.readings === 'object' &&
+            Object.keys(payload.readings).length > 0;
     }
 
     private processPayload(payload: any): void {
