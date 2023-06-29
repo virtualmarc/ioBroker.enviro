@@ -6,7 +6,9 @@
 // you need to create an adapter
 import * as utils from '@iobroker/adapter-core';
 
-const express = require('express');
+import * as express from 'express';
+
+import * as bodyParser from 'body-parser';
 
 // Augment the adapter.config object with the actual types
 // TODO: delete this in the next version
@@ -22,6 +24,7 @@ declare global {
 class Enviro extends utils.Adapter {
 
     private readonly app = express();
+    private _http: any;
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({...options, name: 'enviro',});
@@ -42,11 +45,13 @@ class Enviro extends utils.Adapter {
             res.send('Enviro Custom HTTP Server running, add /enviro to your enviro!');
         });
 
-        this.app.post('/enviro', (req: any, res: any) => {
-            try {
-                this.log.debug(`Incoming request: ${req.body}`);
+        const jsonParser = bodyParser.json();
 
-                const payload: any = JSON.parse(req.body);
+        this.app.post('/enviro', jsonParser, (req: any, res: any) => {
+            try {
+                this.log.debug(`Incoming request: ${JSON.stringify(req.body)}`);
+
+                const payload: any = req.body;
 
                 if (this.validatePayload(payload)) {
                     res.sendStatus(202);
@@ -64,7 +69,7 @@ class Enviro extends utils.Adapter {
             }
         });
 
-        this.app.listen(this.config.port, () => this.log.info('Enviro api started'));
+        this._http = this.app.listen(this.config.port, () => this.log.info('Enviro api started'));
     }
 
     private validatePayload(payload: any): boolean {
@@ -92,7 +97,7 @@ class Enviro extends utils.Adapter {
      */
     private onUnload(callback: () => void): void {
         try {
-            this.app.close(() => this.log.info('Enviro api stopped'));
+            this._http.close(() => this.log.info('Enviro api stopped'));
 
             callback();
         } catch (e) {

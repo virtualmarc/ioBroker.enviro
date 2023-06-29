@@ -15,7 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 const utils = require("@iobroker/adapter-core");
-const express = require('express');
+const express = require("express");
+const bodyParser = require("body-parser");
 class Enviro extends utils.Adapter {
     constructor(options = {}) {
         super(Object.assign(Object.assign({}, options), { name: 'enviro' }));
@@ -35,10 +36,11 @@ class Enviro extends utils.Adapter {
             this.app.get('/', (req, res) => {
                 res.send('Enviro Custom HTTP Server running, add /enviro to your enviro!');
             });
-            this.app.post('/enviro', (req, res) => {
+            const jsonParser = bodyParser.json();
+            this.app.post('/enviro', jsonParser, (req, res) => {
                 try {
-                    this.log.debug(`Incoming request: ${req.body}`);
-                    const payload = JSON.parse(req.body);
+                    this.log.debug(`Incoming request: ${JSON.stringify(req.body)}`);
+                    const payload = req.body;
                     if (this.validatePayload(payload)) {
                         res.sendStatus(202);
                         res.end();
@@ -54,7 +56,7 @@ class Enviro extends utils.Adapter {
                     res.sendStatus(500);
                 }
             });
-            this.app.listen(this.config.port, () => this.log.info('Enviro api started'));
+            this._http = this.app.listen(this.config.port, () => this.log.info('Enviro api started'));
         });
     }
     validatePayload(payload) {
@@ -80,7 +82,7 @@ class Enviro extends utils.Adapter {
      */
     onUnload(callback) {
         try {
-            this.app.close(() => this.log.info('Enviro api stopped'));
+            this._http.close(() => this.log.info('Enviro api stopped'));
             callback();
         }
         catch (e) {
