@@ -1,0 +1,81 @@
+{
+    "common": {
+        "name": "enviro",
+        "version": "0.0.1",
+        "news": {
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "首次出版"
+            }
+        },
+        "title": "Enviro HTTP Endpoint",
+        "titleLang": {
+            "en": "Enviro HTTP Endpoint",
+            "de": "Enviro HTTP-Endpunkt",
+            "ru": "Конечная точка Enviro HTTP",
+            "pt": "Enviro HTTP Endpoint",
+            "nl": "Enviro HTTP-eindpunt",
+            "fr": "Point de terminaison HTTP Enviro",
+            "it": "Endpoint Enviro HTTP",
+            "es": "Punto final HTTP de Enviro",
+            "pl": "Punkt końcowy HTTP Enviro",
+            "zh-cn": "环境 HTTP 端点"
+        },
+        "desc": {
+            "en": "Custom HTTP Endpoint for Pimoroni Enviro Sensors",
+            "de": "Benutzerdefinierter HTTP-Endpunkt für Pimoroni Enviro Sensors",
+            "ru": "Пользовательская конечная точка HTTP для датчиков Pimoroni Enviro",
+            "pt": "Endpoint HTTP personalizado para sensores Pimoroni Enviro",
+            "nl": "Aangepast HTTP-eindpunt voor Pimoroni Enviro-sensoren",
+            "fr": "Point de terminaison HTTP personnalisé pour les capteurs Pimoroni Enviro",
+            "it": "Endpoint HTTP personalizzato per Pimoroni Enviro Sensors",
+            "es": "Endpoint HTTP personalizado para Pimoroni Enviro Sensors",
+            "pl": "Niestandardowy punkt końcowy HTTP dla czujników Pimoroni Enviro",
+            "zh-cn": "Pimoroni Enviro 传感器的自定义 HTTP 端点"
+        },
+        "authors": [
+            "virtualmarc <github@mav.email>"
+        ],
+        "keywords": [
+            "pimoroni",
+            "enviro",
+            "enviro indoor",
+            "enviro grow",
+            "enviro weather",
+            "enviro urban",
+            "sensor",
+            "raspberry pi"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "build/main.js",
+        "icon": "enviro.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/virtualmarc/ioBroker.enviro/master/admin/enviro.png",
+        "readme": "https://github.com/virtualmarc/ioBroker.enviro/blob/master/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "hardware",
+        "compact": true,
+        "materialize": true,
+        "dependencies": [
+            {
+                "js-controller": ">=1.4.2"
+            }
+        ]
+    },
+    "native": {
+        "option1": true,
+        "option2": "42"
+    },
+    "objects": [],
+    "instanceObjects": []
+}
