@@ -1,19 +1,15 @@
 {
     "common": {
         "name": "enviro",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "news": {
             "1.0.0": {
                 "en": "initial release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "zh-cn": "首次出版"
+                "de": "Erstveröffentlichung"
+            },
+            "1.0.1": {
+                "en": "fixed state from field",
+                "de": "from Feld im State korrigiert"
             }
         },
         "title": "Enviro HTTP Endpoint",

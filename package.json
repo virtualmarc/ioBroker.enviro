@@ -1,6 +1,6 @@
 {
     "name": "iobroker.enviro",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Custom HTTP Endpoint for Pimoroni Enviro Sensors",
     "author": {
         "name": "virtualmarc",

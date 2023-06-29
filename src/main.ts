@@ -162,7 +162,7 @@ class Enviro extends utils.Adapter {
             ack: true,
             ts,
             lc: ts,
-            from: this.adapterDir
+            from: this.namespace
         }, true);
     }
 
