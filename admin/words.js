@@ -2,40 +2,42 @@
 'use strict';
 
 systemDictionary = {
-    'enviro adapter settings': {
-        'en': 'Adapter settings for enviro',
-        'de': 'Adaptereinstellungen für enviro',
-        'ru': 'Настройки адаптера для enviro',
-        'pt': 'Configurações do adaptador para enviro',
-        'nl': 'Adapterinstellingen voor enviro',
-        'fr': "Paramètres d'adaptateur pour enviro",
-        'it': "Impostazioni dell'adattatore per enviro",
-        'es': 'Ajustes del adaptador para enviro',
-        'pl': 'Ustawienia adaptera dla enviro',
-        'zh-cn': 'enviro的适配器设置'
-    },
-    'option1': {
-        'en': 'option1',
-        'de': 'Option 1',
-        'ru': 'Опция 1',
-        'pt': 'Opção 1',
-        'nl': 'Optie 1',
-        'fr': 'Option 1',
-        'it': 'opzione 1',
-        'es': 'Opción 1',
-        'pl': 'opcja 1',
-        'zh-cn': '选项1'
-    },
-    'option2': {
-        'en': 'option2',
-        'de': 'Option 2',
-        'ru': 'вариант 2',
-        'pt': 'opção 2',
-        'nl': 'Optie 2',
-        'fr': 'Option 2',
-        'it': 'opzione 2',
-        'es': 'opcion 2',
-        'pl': 'Opcja 2',
-        'zh-cn': '选项2'
-    }
+  'enviro adapter settings': {
+    'en': 'Adapter settings for enviro',
+    'de': 'Adaptereinstellungen für enviro',
+    'ru': 'Настройки адаптера для enviro',
+    'pt': 'Configurações do adaptador para enviro',
+    'nl': 'Adapterinstellingen voor enviro',
+    'fr': 'Paramètres d\'adaptateur pour enviro',
+    'it': 'Impostazioni dell\'adattatore per enviro',
+    'es': 'Ajustes del adaptador para enviro',
+    'pl': 'Ustawienia adaptera dla enviro',
+    'zh-cn': 'enviro的适配器设置'
+  },
+  'IP': {
+    'en': 'IP',
+    'de': 'IP',
+    'ru': 'IP',
+    'pt': 'IP',
+    'nl': 'IK P',
+    'fr': 'IP',
+    'it': 'IP',
+    'es': 'IP',
+    'pl': 'IP',
+    'uk': '',
+    'zh-cn': 'IP'
+  },
+  'Port': {
+    'en': 'Port',
+    'de': 'Port',
+    'ru': 'Порт',
+    'pt': 'Porta',
+    'nl': 'Haven',
+    'fr': 'Port',
+    'it': 'Porta',
+    'es': 'Puerto',
+    'pl': 'Port',
+    'uk': '',
+    'zh-cn': '端口'
+  },
 };

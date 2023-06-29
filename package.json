@@ -23,7 +23,8 @@
     "url": "https://github.com/virtualmarc/ioBroker.enviro"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^2.6.8"
+    "@iobroker/adapter-core": "^2.6.8",
+    "express": "^4.18.2"
   },
   "devDependencies": {
     "@iobroker/testing": "^4.1.0",
