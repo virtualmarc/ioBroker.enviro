@@ -32,9 +32,12 @@ class Enviro extends utils.Adapter {
     onReady() {
         return __awaiter(this, void 0, void 0, function* () {
             this.log.info(`Starting Enviro api on port ${this.config.port}`);
+            this.app.get('/', (req, res) => {
+                res.send('Enviro Custom HTTP Server running, add /enviro to your enviro!');
+            });
             this.app.post('/enviro', (req, res) => {
                 try {
-                    this.log.debug(`Incoming message: ${req.body}`);
+                    this.log.debug(`Incoming request: ${req}`);
                     const payload = JSON.parse(req.body);
                     if (this.validatePayload(payload)) {
                         res.sendStatus(202);
