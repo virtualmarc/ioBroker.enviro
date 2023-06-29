@@ -17,6 +17,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const utils = require("@iobroker/adapter-core");
 const express = require("express");
 const bodyParser = require("body-parser");
+const REGEX_DATE_NEW = /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$/;
+const REGEX_DATE_OLD = /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/;
 class Enviro extends utils.Adapter {
     constructor(options = {}) {
         super(Object.assign(Object.assign({}, options), { name: 'enviro' }));
@@ -68,15 +70,17 @@ class Enviro extends utils.Adapter {
     processPayload(payload) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.writeDeviceObject(payload.nickname);
-            if (payload.hasOwnProperty('model')) {
-                yield this.writeStateObject(`${payload.nickname}.model`, 'model', payload.model);
-            }
+            let ts = Date.now();
             if (payload.hasOwnProperty('timestamp')) {
-                this.writeStateObject(`${payload.nickname}.last_reading`, 'last_reading', payload.timestamp);
+                ts = this.parseTimestamp(payload.timestamp);
+                yield this.writeStateObject(`${payload.nickname}.last_reading`, 'last_reading', payload.timestamp, ts);
+            }
+            if (payload.hasOwnProperty('model')) {
+                yield this.writeStateObject(`${payload.nickname}.model`, 'model', payload.model, ts);
             }
             for (const reading of Object.keys(payload.readings)) {
                 try {
-                    yield this.writeStateObject(`${payload.nickname}.readings.${reading}`, reading, payload.readings[reading]);
+                    yield this.writeStateObject(`${payload.nickname}.readings.${reading}`, reading, payload.readings[reading], ts);
                 }
                 catch (e) {
                     this.log.error(`Error writing state of key ${reading} with valie ${payload.readings[reading]}: ${e.message}`);
@@ -95,7 +99,7 @@ class Enviro extends utils.Adapter {
             });
         });
     }
-    writeStateObject(id, name, valueRaw) {
+    writeStateObject(id, name, valueRaw, ts) {
         return __awaiter(this, void 0, void 0, function* () {
             let valueType = 'string';
             let value = '';
@@ -137,8 +141,28 @@ class Enviro extends utils.Adapter {
                 },
                 native: {}
             });
-            yield this.setStateAsync(id, value, true);
+            yield this.setStateAsync(id, {
+                val: value,
+                ack: true,
+                ts,
+                lc: ts,
+                from: this.adapterDir
+            }, true);
         });
+    }
+    parseTimestamp(datetime) {
+        if (REGEX_DATE_NEW.test(datetime)) {
+            // Parse new date time format
+            return Date.parse(datetime);
+        }
+        else if (REGEX_DATE_OLD.test(datetime)) {
+            // Parse old date time, which misses the T separator and the time zone index (but is UTC)
+            return Date.parse(datetime.replace(' ', 'T') + 'Z');
+        }
+        else {
+            // Unparsable date
+            return Date.now();
+        }
     }
     /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!

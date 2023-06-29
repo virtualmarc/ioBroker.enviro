@@ -21,6 +21,9 @@ declare global {
     }
 }
 
+const REGEX_DATE_NEW: RegExp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$/;
+const REGEX_DATE_OLD: RegExp = /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/;
+
 class Enviro extends utils.Adapter {
 
     private readonly app = express();
@@ -82,16 +85,18 @@ class Enviro extends utils.Adapter {
     private async processPayload(payload: any): Promise<void> {
         await this.writeDeviceObject(payload.nickname);
 
-        if (payload.hasOwnProperty('model')) {
-            await this.writeStateObject(`${payload.nickname}.model`, 'model', payload.model);
-        }
+        let ts: number = Date.now();
         if (payload.hasOwnProperty('timestamp')) {
-            this.writeStateObject(`${payload.nickname}.last_reading`, 'last_reading', payload.timestamp);
+            ts = this.parseTimestamp(payload.timestamp);
+            await this.writeStateObject(`${payload.nickname}.last_reading`, 'last_reading', payload.timestamp, ts);
+        }
+        if (payload.hasOwnProperty('model')) {
+            await this.writeStateObject(`${payload.nickname}.model`, 'model', payload.model, ts);
         }
 
         for (const reading of Object.keys(payload.readings)) {
             try {
-                await this.writeStateObject(`${payload.nickname}.readings.${reading}`, reading, payload.readings[reading]);
+                await this.writeStateObject(`${payload.nickname}.readings.${reading}`, reading, payload.readings[reading], ts);
             } catch (e: any) {
                 this.log.error(`Error writing state of key ${reading} with valie ${payload.readings[reading]}: ${e.message}`);
             }
@@ -108,7 +113,7 @@ class Enviro extends utils.Adapter {
         });
     }
 
-    private async writeStateObject(id: string, name: string, valueRaw: any): Promise<void> {
+    private async writeStateObject(id: string, name: string, valueRaw: any, ts: number): Promise<void> {
         let valueType: 'number' | 'string' | 'boolean' | 'array' | 'object' | 'mixed' | 'file' = 'string';
         let value: any = '';
 
@@ -152,7 +157,26 @@ class Enviro extends utils.Adapter {
             native: {}
         });
 
-        await this.setStateAsync(id, value, true);
+        await this.setStateAsync(id, {
+            val: value,
+            ack: true,
+            ts,
+            lc: ts,
+            from: this.adapterDir
+        }, true);
+    }
+
+    private parseTimestamp(datetime: string): number {
+        if (REGEX_DATE_NEW.test(datetime)) {
+            // Parse new date time format
+            return Date.parse(datetime);
+        } else if (REGEX_DATE_OLD.test(datetime)) {
+            // Parse old date time, which misses the T separator and the time zone index (but is UTC)
+            return Date.parse(datetime.replace(' ', 'T') + 'Z');
+        } else {
+            // Unparsable date
+            return Date.now();
+        }
     }
 
     /**
