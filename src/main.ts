@@ -79,27 +79,27 @@ class Enviro extends utils.Adapter {
             Object.keys(payload.readings).length > 0;
     }
 
-    private processPayload(payload: any): void {
-        this.writeDeviceObject(payload.nickname);
+    private async processPayload(payload: any): Promise<void> {
+        await this.writeDeviceObject(payload.nickname);
 
         if (payload.hasOwnProperty('model')) {
-            this.writeStateObject(`${payload.nickname}.model`, 'model', payload.model);
+            await this.writeStateObject(`${payload.nickname}.model`, 'model', payload.model);
         }
         if (payload.hasOwnProperty('timestamp')) {
             this.writeStateObject(`${payload.nickname}.last_reading`, 'last_reading', payload.timestamp);
         }
 
-        for (const reading in Object.keys(payload.readings)) {
+        for (const reading of Object.keys(payload.readings)) {
             try {
-                this.writeStateObject(`${payload.nickname}.readings.${reading}`, reading, payload.readings[reading]);
+                await this.writeStateObject(`${payload.nickname}.readings.${reading}`, reading, payload.readings[reading]);
             } catch (e: any) {
                 this.log.error(`Error writing state of key ${reading} with valie ${payload.readings[reading]}: ${e.message}`);
             }
         }
     }
 
-    private writeDeviceObject(device: string): void {
-        this.setObjectNotExists(device, {
+    private async writeDeviceObject(device: string): Promise<void> {
+        await this.setObjectNotExistsAsync(device, {
             type: 'device',
             native: {},
             common: {
@@ -108,7 +108,7 @@ class Enviro extends utils.Adapter {
         });
     }
 
-    private writeStateObject(id: string, name: string, valueRaw: any): void {
+    private async writeStateObject(id: string, name: string, valueRaw: any): Promise<void> {
         let valueType: 'number' | 'string' | 'boolean' | 'array' | 'object' | 'mixed' | 'file' = 'string';
         let value: any = '';
 
@@ -139,7 +139,7 @@ class Enviro extends utils.Adapter {
                 break;
         }
 
-        this.setObjectNotExists(id, {
+        await this.setObjectNotExistsAsync(id, {
             type: 'state',
             common: {
                 name: name,
@@ -152,7 +152,7 @@ class Enviro extends utils.Adapter {
             native: {}
         });
 
-        this.setState(id, value, true);
+        await this.setStateAsync(id, value, true);
     }
 
     /**
