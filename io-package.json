@@ -73,7 +73,7 @@
     ]
   },
   "native": {
-    "port": "8088"
+    "port": 8088
   },
   "objects": [],
   "instanceObjects": []
