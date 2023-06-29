@@ -59,7 +59,7 @@ class Enviro extends utils.Adapter {
 
                     this.processPayload(payload);
                 } else {
-                    this.log.warn(`Invalid input: ${payload}`);
+                    this.log.warn(`Invalid input: ${JSON.stringify(payload)}`);
 
                     res.sendStatus(400);
                 }
@@ -74,14 +74,18 @@ class Enviro extends utils.Adapter {
 
     private validatePayload(payload: any): boolean {
         return payload.hasOwnProperty('nickname') &&
-            payload.hasOwnProperty('model') &&
             payload.hasOwnProperty('readings') &&
             typeof payload.readings === 'object' &&
             Object.keys(payload.readings).length > 0;
     }
 
     private processPayload(payload: any): void {
-        this.setState(`${payload.nickname}.model`, payload.model, true);
+        if (payload.hasOwnProperty('model')) {
+            this.setState(`${payload.nickname}.model`, payload.model, true);
+        }
+        if (payload.hasOwnProperty('timestamp')) {
+            this.setState(`${payload.nickname}.last_reading`, payload.timestamp, true);
+        }
 
         for (const reading of payload.readings) {
             try {
