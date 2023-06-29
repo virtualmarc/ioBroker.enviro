@@ -21,8 +21,8 @@ declare global {
     }
 }
 
-const REGEX_DATE_NEW: RegExp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$/;
-const REGEX_DATE_OLD: RegExp = /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/;
+const REGEX_DATE_NEW = /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$/;
+const REGEX_DATE_OLD = /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/;
 
 class Enviro extends utils.Adapter {
 
