@@ -114,7 +114,7 @@ jobs:
                     BODY="${BODY//'%'/'%25'}"
                     BODY="${BODY//$'\n'/'%0A'}"
                     BODY="${BODY//$'\r'/'%0D'}"
-                    echo "BODY::$BODY" >> "$GITHUB_ENV"
+                    echo "BODY=$BODY" >> "$GITHUB_ENV"
 
             -   name: Install Dependencies
                 run: npm ci
