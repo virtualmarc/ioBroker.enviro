@@ -44,7 +44,7 @@ class Enviro extends utils.Adapter {
 
         this.app.post('/enviro', (req: any, res: any) => {
             try {
-                this.log.debug(`Incoming request: ${JSON.stringify(req)}`);
+                this.log.debug(`Incoming request: ${req.body}`);
 
                 const payload: any = JSON.parse(req.body);
 
