@@ -66,20 +66,73 @@ class Enviro extends utils.Adapter {
             Object.keys(payload.readings).length > 0;
     }
     processPayload(payload) {
+        this.writeDeviceObject(payload.nickname);
         if (payload.hasOwnProperty('model')) {
-            this.setState(`${payload.nickname}.model`, payload.model, true);
+            this.writeStateObject(`${payload.nickname}.model`, 'model', payload.model);
         }
         if (payload.hasOwnProperty('timestamp')) {
-            this.setState(`${payload.nickname}.last_reading`, payload.timestamp, true);
+            this.writeStateObject(`${payload.nickname}.last_reading`, 'last_reading', payload.timestamp);
         }
-        for (const reading of payload.readings) {
+        for (const reading in Object.keys(payload.readings)) {
             try {
-                this.setState(`${payload.nickname}.readings.${reading}`, payload.readings[reading], true);
+                this.writeStateObject(`${payload.nickname}.readings.${reading}`, reading, payload.readings[reading]);
             }
             catch (e) {
                 this.log.error(`Error writing state of key ${reading} with valie ${payload.readings[reading]}: ${e.message}`);
             }
         }
+    }
+    writeDeviceObject(device) {
+        this.setObjectNotExists(device, {
+            type: 'device',
+            native: {},
+            common: {
+                name: device,
+            }
+        });
+    }
+    writeStateObject(id, name, valueRaw) {
+        let valueType = 'string';
+        let value = '';
+        switch (typeof valueRaw) {
+            case 'bigint':
+                valueType = 'number';
+                value = Number(valueRaw);
+                break;
+            case 'boolean':
+                valueType = 'boolean';
+                value = valueRaw;
+                break;
+            case 'object':
+                valueType = 'object';
+                value = valueRaw;
+                break;
+            case 'number':
+                valueType = 'number';
+                value = valueRaw;
+                break;
+            case 'string':
+                value = 'string';
+                value = valueRaw;
+                break;
+            default:
+                valueType = 'string';
+                value = '';
+                break;
+        }
+        this.setObjectNotExists(id, {
+            type: 'state',
+            common: {
+                name: name,
+                type: valueType,
+                desc: name,
+                read: true,
+                write: false,
+                role: 'value'
+            },
+            native: {}
+        });
+        this.setState(id, value, true);
     }
     /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!

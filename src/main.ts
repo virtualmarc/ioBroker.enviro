@@ -80,20 +80,79 @@ class Enviro extends utils.Adapter {
     }
 
     private processPayload(payload: any): void {
+        this.writeDeviceObject(payload.nickname);
+
         if (payload.hasOwnProperty('model')) {
-            this.setState(`${payload.nickname}.model`, payload.model, true);
+            this.writeStateObject(`${payload.nickname}.model`, 'model', payload.model);
         }
         if (payload.hasOwnProperty('timestamp')) {
-            this.setState(`${payload.nickname}.last_reading`, payload.timestamp, true);
+            this.writeStateObject(`${payload.nickname}.last_reading`, 'last_reading', payload.timestamp);
         }
 
-        for (const reading of payload.readings) {
+        for (const reading in Object.keys(payload.readings)) {
             try {
-                this.setState(`${payload.nickname}.readings.${reading}`, payload.readings[reading], true);
+                this.writeStateObject(`${payload.nickname}.readings.${reading}`, reading, payload.readings[reading]);
             } catch (e: any) {
                 this.log.error(`Error writing state of key ${reading} with valie ${payload.readings[reading]}: ${e.message}`);
             }
         }
+    }
+
+    private writeDeviceObject(device: string): void {
+        this.setObjectNotExists(device, {
+            type: 'device',
+            native: {},
+            common: {
+                name: device,
+            }
+        });
+    }
+
+    private writeStateObject(id: string, name: string, valueRaw: any): void {
+        let valueType: 'number' | 'string' | 'boolean' | 'array' | 'object' | 'mixed' | 'file' = 'string';
+        let value: any = '';
+
+        switch (typeof valueRaw) {
+            case 'bigint':
+                valueType = 'number';
+                value = Number(valueRaw);
+                break;
+            case 'boolean':
+                valueType = 'boolean';
+                value = valueRaw;
+                break;
+            case 'object':
+                valueType = 'object';
+                value = valueRaw;
+                break;
+            case 'number':
+                valueType = 'number';
+                value = valueRaw;
+                break;
+            case 'string':
+                value = 'string';
+                value = valueRaw;
+                break;
+            default:
+                valueType = 'string';
+                value = '';
+                break;
+        }
+
+        this.setObjectNotExists(id, {
+            type: 'state',
+            common: {
+                name: name,
+                type: valueType,
+                desc: name,
+                read: true,
+                write: false,
+                role: 'value'
+            },
+            native: {}
+        });
+
+        this.setState(id, value, true);
     }
 
     /**
