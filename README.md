@@ -38,6 +38,10 @@ Save the settings and reset the device.
 
 * (virtualmarc) initial release
 
+### 1.0.1
+
+* (virtualmarc) fixed state from field
+
 ## License
 
 MIT License
